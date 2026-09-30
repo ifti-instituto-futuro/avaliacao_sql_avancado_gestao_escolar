@@ -43,14 +43,14 @@ CREATE VIEW [dbo].[VW_MatriculasAtivas]
             tu.AnoLetivo,
             tu.IdCurso,
             cu.Nome as NomeCurso
-        FROM [dbo].[Matricula] AS ma
-            INNER JOIN [dbo].[SituacaoMatricula] AS si
+        FROM [dbo].[Matricula] AS ma WITH(NOLOCK)
+            INNER JOIN [dbo].[SituacaoMatricula] AS si WITH(NOLOCK)
                 ON ma.IdSituacaoMatricula = si.Id
-            INNER JOIN [dbo].[Aluno] AS al
+            INNER JOIN [dbo].[Aluno] AS al WITH(NOLOCK)
                 ON ma.IdAluno = al.Id
-            INNER JOIN [dbo].[Turma] AS tu
+            INNER JOIN [dbo].[Turma] AS tu WITH(NOLOCK)
                 ON ma.IdTurma = tu.Id
-            INNER JOIN [dbo].[Curso] AS cu
+            INNER JOIN [dbo].[Curso] AS cu WITH(NOLOCK)
                 ON tu.IdCurso = cu.Id
         WHERE IdSituacaoMatricula = 1
     GO
@@ -115,10 +115,10 @@ CREATE VIEW [dbo].[VW_SituacaoFinanceira]
                             pa.ValorOriginal + (pa.ValorOriginal * 0.01 * DATEDIFF(MONTH, pa.DataVencimento, GETDATE()))
                     END
                ) as ValorTotalPendente
-        FROM [dbo].[Matricula] AS ma
-            INNER JOIN [dbo].[Aluno] AS al
+        FROM [dbo].[Matricula] AS ma WITH(NOLOCK)
+            INNER JOIN [dbo].[Aluno] AS al WITH(NOLOCK)
                 ON ma.IdAluno = al.Id
-            INNER JOIN [dbo].[Parcela] AS pa
+            INNER JOIN [dbo].[Parcela] AS pa WITH(NOLOCK)
                 ON ma.Id = pa.IdMatricula
         GROUP BY ma.Id, al.Id, al.Nome, al.Cpf
     GO
@@ -165,7 +165,7 @@ CREATE FUNCTION [dbo].[FNC_VagasDisponiveisNaTurma] (
                 
         SELECT @VagasMaximas = Capacidade,
                 @SituacaoTurma = Ativo
-            FROM [dbo].[Turma] 
+            FROM [dbo].[Turma] WITH(NOLOCK)
             WHERE Id = @IdTurma 
 
         IF @VagasMaximas IS NULL
@@ -327,7 +327,7 @@ CREATE PROCEDURE [dbo].[SP_RealizarReserva]
         IF @SituacaoAluno <> 1
             RETURN -2 -- O aluno nao esta ativo 
 
-        IF NOT EXISTS ( SELECT TOP 1 1 FROM [dbo].[Turma] WHERE Id = @IdTurma AND Ativo = 1 )
+        IF NOT EXISTS ( SELECT TOP 1 1 FROM [dbo].[Turma] WITH(NOLOCK) WHERE Id = @IdTurma AND Ativo = 1 )
             RETURN -3 -- Esta turma nao esta ativa
 
         IF dbo.FNC_VagasDisponiveisNaTurma(@IdTurma) = -1
