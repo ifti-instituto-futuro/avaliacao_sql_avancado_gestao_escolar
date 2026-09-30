@@ -548,7 +548,7 @@ BEGIN
     -- Desfaz a matricula se a reserva nao foi atualizada.
     IF @@ERROR <> 0 OR @@ROWCOUNT <> 1
     BEGIN
-        IF @@TRANCOUNT > 0 -- vec
+        IF @@TRANCOUNT > 0 
             ROLLBACK TRANSACTION;
 
         RETURN -9;
