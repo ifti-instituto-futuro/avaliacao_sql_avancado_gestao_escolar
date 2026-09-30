@@ -567,7 +567,7 @@ BEGIN TRANSACTION
     
     EXEC @Retorno = [dbo].[SP_ReservarMatricula] 12, 3
 
-    SELECT @Retorno AS Retorno
+    SELECT @Retorno AS Retorno -- Id da reserva cadastrada - Sucesso
 
 ROLLBACK TRANSACTION
 GO
@@ -580,7 +580,7 @@ BEGIN TRANSACTION
     EXEC [dbo].[SP_ReservarMatricula] 12, 3
     EXEC @Retorno = [dbo].[SP_ReservarMatricula] 8, 3
 
-    SELECT @Retorno AS Retorno
+    SELECT @Retorno AS Retorno -- -4 Turma nao tem vagas disponiveis
 
 ROLLBACK TRANSACTION
 GO
@@ -592,7 +592,7 @@ BEGIN TRANSACTION
     
     EXEC @Retorno = [dbo].[SP_ReservarMatricula] 1, 1
 
-    SELECT @Retorno AS Retorno
+    SELECT @Retorno AS Retorno -- -5 Aluno ja possui reserva na turma informada
 
 ROLLBACK TRANSACTION
 GO
@@ -605,7 +605,7 @@ BEGIN TRANSACTION
     
     EXEC @Retorno = [dbo].[SP_ReservarMatricula] 13, 1
 
-    SELECT @Retorno AS Retorno
+    SELECT @Retorno AS Retorno -- -2 Aluno Inativo
 
 ROLLBACK TRANSACTION
 GO
@@ -631,7 +631,7 @@ BEGIN TRANSACTION
     
     EXEC @Retorno = [dbo].[SP_EfetivarMatricula] 6
 
-    SELECT @Retorno AS Retorno
+    SELECT @Retorno AS Retorno -- -2 Situacao da reserva nao permite efetivar matricula
 
 ROLLBACK TRANSACTION
 GO
@@ -644,7 +644,7 @@ BEGIN TRANSACTION
     
     EXEC @Retorno = [dbo].[SP_EfetivarMatricula] 10
 
-    SELECT @Retorno AS Retorno
+    SELECT @Retorno AS Retorno -- -3 Reserva expirada
 
 ROLLBACK TRANSACTION
 GO
@@ -683,7 +683,7 @@ BEGIN TRANSACTION
     
     EXEC @Retorno = [dbo].[SP_RegistrarPagamento] 1, 1000
 
-    SELECT @Retorno AS Retorno
+    SELECT @Retorno AS Retorno -- -2 Parcela ja paga ou cancelada
 
 ROLLBACK TRANSACTION
 GO
@@ -730,7 +730,7 @@ BEGIN TRANSACTION
     
     EXEC @Retorno = [dbo].[SP_CancelarMatricula] 1
 
-    SELECT @Retorno AS Retorno
+    SELECT @Retorno AS Retorno -- -3 Existem parcelas pendentes com negociacao nao quitada
 
 ROLLBACK TRANSACTION
 GO
@@ -743,7 +743,7 @@ BEGIN TRANSACTION
     
     EXEC @Retorno = [dbo].[SP_CancelarMatricula] 4
 
-    SELECT @Retorno AS Retorno
+    SELECT @Retorno AS Retorno -- 0 Sucesso
 
 ROLLBACK TRANSACTION
 GO
@@ -756,7 +756,7 @@ BEGIN TRANSACTION
     
     EXEC @Retorno = [dbo].[SP_CancelarMatricula] 2
 
-    SELECT @Retorno AS Retorno
+    SELECT @Retorno AS Retorno -- 0 Sucesso
 
 ROLLBACK TRANSACTION
 GO
@@ -777,16 +777,16 @@ DECLARE @Retorno INT;
 
 SELECT @Retorno = [dbo].[FNC_VagasDisponiveis](1)
 
-SELECT @Retorno AS Retorno
+SELECT @Retorno AS Retorno -- Quantidade de vagas
 
 GO
 
--- 19 - Chamda function 2
+-- 19 - Chamada function 2
 
 DECLARE @Retorno INT;
 
 SELECT @Retorno = [dbo].[FNC_CalcularParcelaData](13, GETDATE())
 
-SELECT @Retorno AS Retorno
+SELECT @Retorno AS Retorno -- Valor da parcela
 
 GO
